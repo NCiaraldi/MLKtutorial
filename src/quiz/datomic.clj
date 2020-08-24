@@ -168,9 +168,6 @@
 
 ; find all the companies with address, if a company is missing the address
 ; return the name of the company and "NO ADDRESS"
-(d/q '[:find ?company-name ?company-town
-       :where [?company :company/name ?company-name]
-       [(get-else $ ?company :company/address "NO ADDRESS") ?company-town]] db)
 
 
 
