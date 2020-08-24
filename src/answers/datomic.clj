@@ -75,7 +75,7 @@
                        :company/invoices [{:invoice/code "I006" :invoice/amount (double 5556)} {:invoice/code "I007" }]
                        }])
 
-; transact another company with two invoices but whithout adress
+; transact another company with two invoices but whithout address
 @(d/transact conn-db [{:company/name  "Google" :company/address "Mountain View, California" :company/bank_account "IT0005"
                        :company/invoices [{:invoice/code "I099" :invoice/amount (double 2344)} {:invoice/code "I088" :invoice/amount (double 89706)}]
                        }])
@@ -187,14 +187,14 @@
 
 
 
-; define a rule to extract all the companies with adress
-(def rule8 '[[(company-with-adress ?company-name ?company-adress )
-              [(get-else $ ?company :company/address "NO ADDRESS") ?company-adress]
+; define a rule to extract all the companies with address
+(def rule8 '[[(company-with-address ?company-name ?company-address )
+              [(get-else $ ?company :company/address "NO ADDRESS") ?company-address]
               [?company :company/name ?company-name]]])
 
-(d/q '[:find ?company-name ?company-adress
+(d/q '[:find ?company-name ?company-address
        :in $ %
-       :where (company-with-adress ?company-name ?company-adress)] db rule8)
+       :where (company-with-address ?company-name ?company-address)] db rule8)
 
 
 
@@ -286,7 +286,7 @@
 
 
 ; find all the companies with address, if a company is missing the address
-; return the name of the company and "NO ADRESS"
+; return the name of the company and "NO ADDRESS"
 (d/q '[:find ?company-name ?company-town
        :where [?company :company/name ?company-name]
        [(get-else $ ?company :company/address "NO ADDRESS") ?company-town]] db)
@@ -387,25 +387,25 @@
                     [[:db/add company-name :company/address "1600 Amphitheatre Parkway\nMountain View, CA 94043"]
                      [:db/add "datomic.tx" :db/doc "correct data entry error"]]))
       db-after (:db-after tx-result)
-      adress-after (-> (d/pull db-after '[:company-name :company/address] company-name)
+      address-after (-> (d/pull db-after '[:company-name :company/address] company-name)
                        :company/address)]
-  [company-name adress-after])
+  [company-name address-after])
 
 
 
 ; define a function that shows all the addresses that a company had during its history
-(d/q '[:find ?company-name ?company-adress
+(d/q '[:find ?company-name ?company-address
        :in $ ?name
        :where
        [?company :company/name ?name]
        [?company :company/name ?company-name]
-       [?company :company/address ?company-adress]]
+       [?company :company/address ?company-address]]
      (d/history db) "Google")
 
 
 
 
-; change the adress of a company then get the instance of the db after the transaction and return
+; change the address of a company then get the instance of the db after the transaction and return
 ; company name and address
 (let [db (d/db conn-db)
       company-name [:company/name "Google"]
@@ -415,9 +415,9 @@
                     [[:db/add company-name :company/address "1600 Amphitheatre Parkway\nMountain View, CA 94043"]
                      [:db/add "datomic.tx" :db/doc "correct data entry error"]]))
       db-after (:db-after tx-result)
-      adress-after (-> (d/pull db-after '[:company-name :company/address] company-name)
+      address-after (-> (d/pull db-after '[:company-name :company/address] company-name)
                        :company/address)]
-  [company-name adress-after])
+  [company-name address-after])
 
 
 
@@ -426,7 +426,7 @@
 ;                         ->  https://blog.datomic.com/2013/10/the-transaction-report-queue.html
 ; using a tx-report-queue,
 ;   define a watcher on the connection in a separate thread,
-;   change the value of a company adress in db,
+;   change the value of a company address in db,
 ;   take the tx-data from tx-report-queue and query on the db instances to show the values of the address property before and after
 (let [db (d/db conn-db)
       q (fn [name db]  (d/q '[:find ?company-address :in $ ?name :where [?company :company/name ?name]
@@ -448,6 +448,6 @@
                     [[:db/add company-name :company/address "1600 Amphitheatre Parkway\nMountain View, CA 94043"]
                      [:db/add "datomic.tx" :db/doc "correct data entry error"]]))
       db-after (:db-after tx-result)
-      adress-after (-> (d/pull db-after '[:company-name :company/address] company-name)
+      address-after (-> (d/pull db-after '[:company-name :company/address] company-name)
                        :company/address)]
-  [company-name adress-after])
+  [company-name address-after])

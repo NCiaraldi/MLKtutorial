@@ -71,7 +71,7 @@
 ; transact another company with two invoices, one of them wihtout amount
 
 
-; transact another company with two invoices but whithout adress
+; transact another company with two invoices but whithout address
 
 
 
@@ -120,7 +120,7 @@
 
 
 
-; define a rule to extract all the companies with adress
+; define a rule to extract all the companies with address
 
 
 
@@ -167,7 +167,7 @@
 
 
 ; find all the companies with address, if a company is missing the address
-; return the name of the company and "NO ADRESS"
+; return the name of the company and "NO ADDRESS"
 (d/q '[:find ?company-name ?company-town
        :where [?company :company/name ?company-name]
        [(get-else $ ?company :company/address "NO ADDRESS") ?company-town]] db)
@@ -222,7 +222,7 @@
 
 
 
-; change the adress of a company then get the instance of the db after the transaction and return
+; change the address of a company then get the instance of the db after the transaction and return
 ; company name and address
 
 
@@ -233,6 +233,6 @@
 ;                         ->  https://blog.datomic.com/2013/10/the-transaction-report-queue.html
 ; using a tx-report-queue,
 ;   define a watcher on the connection in a separate thread,
-;   change the value of a company adress in db,
+;   change the value of a company address in db,
 ;   take the tx-data from tx-report-queue and query on the db instances to show the values of the address property before and after
 
