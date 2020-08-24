@@ -57,24 +57,25 @@
 
 ;given the schema above:
 
-; 1. transact two different companies whitout any invoice
+; transact two different companies whitout any invoice
 @(d/transact conn-db [{:company/name "Milkman S.p.A." :company/address "Via Germania 12" :company/bank_account "IT0002"}])
 @(d/transact conn-db [{:company/name "Accenture" :company/bank_account "IT000258987"}])
 
-; 2. transact two invoices whithout company
+; transact two invoices whithout company
 @(d/transact conn-db [{:invoice/code "I001" :invoice/amount (double 15000)}])
 
-;3. transact a company with two invoices
+
+; transact a company with two invoices
 @(d/transact conn-db [{:company/name  "Milkman-Services S.R.L." :company/address "Via Germania 12" :company/bank_account "IT0004"
                        :company/invoices [{:invoice/code "I002" :invoice/amount (double 16040)}{:invoice/code "I003" :invoice/amount (double 12354)}{:invoice/code "I103" :invoice/amount (double 87551)}]
                        }])
 
-;3.1  transact another company with two invoices
+; transact another company with two invoices, one of them wihtout amount
 @(d/transact conn-db [{:company/name  "Microsoft" :company/address "Via Germania 13" :company/bank_account "IT0003"
-                       :company/invoices [{:invoice/code "I006" :invoice/amount (double 5556)} {:invoice/code "I007" :invoice/amount (double 9899)}]
+                       :company/invoices [{:invoice/code "I006" :invoice/amount (double 5556)} {:invoice/code "I007" }]
                        }])
 
-;3.2  transact another company with two invoices but whithout adress
+; transact another company with two invoices but whithout adress
 @(d/transact conn-db [{:company/name  "Google" :company/address "Mountain View, California" :company/bank_account "IT0005"
                        :company/invoices [{:invoice/code "I099" :invoice/amount (double 2344)} {:invoice/code "I088" :invoice/amount (double 89706)}]
                        }])

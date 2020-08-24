@@ -23,8 +23,6 @@
                       :db/valueType   :db.type/double
                       :db/cardinality :db.cardinality/one
                       }])
-
-;se si mette :db/isComponent true nel datom con cardinalità many si crea il concetto di FK. senza il sistema non riesce ad utilizzare l'id dell'entita in relazione
 (def company-schema [{
                       :db/ident   	:company/name
                       :db/valueType   :db.type/string
@@ -60,9 +58,7 @@
 
 ;given the schema above:
 
-
 ; transact two different companies whitout any invoice
-
 
 
 ; transact two invoices whithout company
@@ -72,12 +68,11 @@
 ; transact a company with two invoices
 
 
-
-; transact another company with two invoices
-
+; transact another company with two invoices, one of them wihtout amount
 
 
 ; transact another company with two invoices but whithout adress
+
 
 
 
@@ -87,7 +82,6 @@
 
 
 ; find all the companies with their related invoices (in both ways: query and pull)
-
 
 
 
@@ -172,10 +166,11 @@
 
 
 
-
 ; find all the companies with address, if a company is missing the address
 ; return the name of the company and "NO ADRESS"
-
+(d/q '[:find ?company-name ?company-town
+       :where [?company :company/name ?company-name]
+       [(get-else $ ?company :company/address "NO ADDRESS") ?company-town]] db)
 
 
 
@@ -240,3 +235,4 @@
 ;   define a watcher on the connection in a separate thread,
 ;   change the value of a company adress in db,
 ;   take the tx-data from tx-report-queue and query on the db instances to show the values of the address property before and after
+
