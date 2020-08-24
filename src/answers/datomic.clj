@@ -23,8 +23,6 @@
                       :db/valueType   :db.type/double
                       :db/cardinality :db.cardinality/one
                       }])
-
-;se si mette :db/isComponent true nel datom con cardinalità many si crea il concetto di FK. senza il sistema non riesce ad utilizzare l'id dell'entita in relazione
 (def company-schema [{
                       :db/ident   	:company/name
                       :db/valueType   :db.type/string
